@@ -92,11 +92,11 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
@@ -139,6 +139,7 @@ object CreateJWT(User user, IConfiguration configuration)
     return new { Token = tokenString };
 }
 
+app.MapGet("/", ()=> "Server API is running");
 // Login
 app.MapPost("/login", async ([FromBody] LoginModel loginModel, ToDoListContext db, IConfiguration configuration) =>
 {
