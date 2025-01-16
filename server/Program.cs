@@ -15,6 +15,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>(); 
+}
+
+var connectionString = builder.Configuration.GetConnectionString("ToDoList");
+
+builder.Services.AddDbContext<ToDoListContext>(options =>
+    options.UseMySql(
+        connectionString,
+                ServerVersion.AutoDetect(connectionString)
+
+    )
+);
+
+
+Console.WriteLine($"Connection String: {builder.Configuration.GetConnectionString("ToDoList")}");
+
+
 
 builder.Services.AddDbContext<ToDoListContext>(options =>
     options.UseMySql(
@@ -79,14 +98,12 @@ builder.Services.AddAuthentication(options =>
     });
 
 // CORS
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", policy =>
+    options.AddPolicy("general", builder =>
     {
-        policy.WithOrigins("http://localhost:3000") 
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials(); // אם נדרש
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
@@ -99,7 +116,7 @@ var app = builder.Build();
 //}
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("general");
 
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
