@@ -10,16 +10,19 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
+using MySqlConnector;
 
 var builder = WebApplication.CreateBuilder(args);
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+
 if (builder.Environment.IsDevelopment())
 {
-    builder.Configuration.AddUserSecrets<Program>(); 
+    builder.Configuration.AddUserSecrets<Program>();
 }
 
+builder.Configuration.AddEnvironmentVariables();
 var connectionString = builder.Configuration.GetConnectionString("ToDoList");
 
 builder.Services.AddDbContext<ToDoListContext>(options =>
@@ -109,11 +112,10 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-//if (app.Environment.IsDevelopment())
-//{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-//}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 
 app.UseCors("general");
@@ -156,7 +158,7 @@ object CreateJWT(User user, IConfiguration configuration)
     return new { Token = tokenString };
 }
 
-app.MapGet("/", ()=> "Server API is running");
+app.MapGet("/", () => "Server API is running");
 // Login
 app.MapPost("/login", async ([FromBody] LoginModel loginModel, ToDoListContext db, IConfiguration configuration) =>
 {

@@ -7,7 +7,10 @@ yarn-error.log
 dist/
 build/
 *.log
+bin/
+obj/
 
+secrets.json
 # Environment variables
 .env
 .env.local

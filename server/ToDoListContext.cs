@@ -21,13 +21,13 @@ public partial class ToDoListContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("name=ToDoList", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.35-mysql"));
+        => optionsBuilder.UseMySql("name=ToDoList", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.22-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
+            .UseCollation("utf8_general_ci")
+            .HasCharSet("utf8");
 
         modelBuilder.Entity<Item>(entity =>
         {
@@ -35,7 +35,7 @@ public partial class ToDoListContext : DbContext
 
             entity.ToTable("items");
 
-            entity.HasIndex(e => e.UserId, "FK_items_user");
+            entity.HasIndex(e => e.UserId, "FK_items_user_idx");
 
             entity.Property(e => e.Name).HasMaxLength(100);
 
@@ -61,9 +61,7 @@ public partial class ToDoListContext : DbContext
                 .HasColumnName("email");
             entity.Property(e => e.Password)
                 .HasMaxLength(15)
-                .HasColumnName("password")
-                .UseCollation("utf8mb3_general_ci")
-                .HasCharSet("utf8mb3");
+                .HasColumnName("password");
             entity.Property(e => e.Username)
                 .HasMaxLength(45)
                 .HasColumnName("username");
