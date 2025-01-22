@@ -2,13 +2,7 @@ import axios from 'axios';
 import jwt_decode from "jwt-decode";
 
 
-// axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-// console.log('process.env.API_URL', process.env.REACT_APP_API_URL)
-
-
-// הגדרת URL של ה-API כערך ברירת מחדל
-//axios.defaults.baseURL = "http://localhost:5238";
-axios.defaults.baseURL = "https://todolist-server-4o34.onrender.com"
+ axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 setAuthorizationBearer();
 
 
@@ -23,6 +17,7 @@ function setAuthorizationBearer() {
   if (accessToken) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   }
+  console.log("accessToken",accessToken);
 }
 
 
